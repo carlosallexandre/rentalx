@@ -16,7 +16,10 @@ class ImportCategoriesUseCase {
 
       parser
         .on("error", (err) => reject(err))
-        .on("end", () => resolve(categories))
+        .on("end", async () => {
+          await fs.promises.unlink(file.path);
+          resolve(categories);
+        })
         .on("readable", () => {
           let chunk = parser.read();
 
