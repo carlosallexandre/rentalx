@@ -1,4 +1,5 @@
 import { Repository } from "typeorm";
+import { v4 as uuidv4 } from "uuid";
 
 import postgresDb from "../../../../database";
 import Specification from "../../entities/Specification";
@@ -23,6 +24,7 @@ class SpecificationsRepository implements ISpecificationsRepository {
     name,
   }: ICreateSpecificationDTO): Promise<Specification> {
     const specification = this.repository.create({
+      id: uuidv4(),
       name,
       description,
     });
