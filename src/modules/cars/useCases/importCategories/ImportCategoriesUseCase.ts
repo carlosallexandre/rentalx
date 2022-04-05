@@ -39,15 +39,19 @@ class ImportCategoriesUseCase {
   async execute(file: Express.Multer.File): Promise<void> {
     const categories = await this.loadCategories(file);
 
-    categories.forEach((category) => {
-      const categoryAlreadyExists = this.categoriesRepository.findByName(
+    // eslint-disable-next-line no-restricted-syntax
+    for (const category of categories) {
+      // eslint-disable-next-line no-await-in-loop
+      const categoryAlreadyExists = await this.categoriesRepository.findByName(
         category.name
       );
 
-      if (categoryAlreadyExists) return;
+      // eslint-disable-next-line no-continue
+      if (categoryAlreadyExists) continue;
 
-      this.categoriesRepository.create(category);
-    });
+      // eslint-disable-next-line no-await-in-loop
+      await this.categoriesRepository.create(category);
+    }
   }
 }
 
