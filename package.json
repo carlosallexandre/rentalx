@@ -4,6 +4,11 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "typeorm": "POSTGRES_HOST=localhost ts-node-dev --require dotenv/config ./node_modules/typeorm/cli -d ./src/database",
+    "migration:run": "yarn typeorm migration:run",
+    "migration:show": "yarn typeorm migration:show",
+    "migration:revert": "yarn typeorm migration:revert",
+    "migration:create": "wrap() { ts-node-dev ./node_modules/typeorm/cli migration:create src/database/migrations/\"$*\";}; wrap",
     "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node_modules --respawn src/server.ts"
   },
   "dependencies": {
@@ -14,6 +19,8 @@
     "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
     "swagger-ui-express": "^4.3.0",
+    "ts-node": "^10.7.0",
+    "tsyringe": "^4.6.0",
     "typeorm": "^0.3.4",
     "uuid": "^8.3.2"
   },

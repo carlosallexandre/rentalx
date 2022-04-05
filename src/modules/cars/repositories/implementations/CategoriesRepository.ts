@@ -1,41 +1,37 @@
-import Category from "../../model/Category";
+import { Repository } from "typeorm";
+import { v4 as uuidv4 } from "uuid";
+
+import postgresDb from "../../../../database";
+import Category from "../../entities/Category";
 import {
   ICategoriesRepository,
   ICreateCategoryDTO,
 } from "../ICategoriesRepository";
 
 class CategoriesRepository implements ICategoriesRepository {
-  private categories: Category[];
+  private repository: Repository<Category>;
 
-  private static INSTANCE: ICategoriesRepository;
-
-  public static getInstance() {
-    if (!CategoriesRepository.INSTANCE) {
-      CategoriesRepository.INSTANCE = new CategoriesRepository();
-    }
-    return CategoriesRepository.INSTANCE;
+  constructor() {
+    this.repository = postgresDb.getRepository("categories");
   }
 
-  private constructor() {
-    this.categories = [];
-  }
-
-  create({ name, description }: ICreateCategoryDTO) {
-    const category = new Category({
+  async create({ name, description }: ICreateCategoryDTO) {
+    const category = this.repository.create({
+      id: uuidv4(),
       name,
       description,
-      created_at: new Date(),
     });
 
-    this.categories.push(category);
+    await this.repository.save(category);
   }
 
-  list(): Category[] {
-    return this.categories;
+  async list(): Promise<Category[]> {
+    const categories = await this.repository.find();
+    return categories;
   }
 
-  findByName(name: string): Category | undefined {
-    return this.categories.find((category) => category.name === name);
+  async findByName(name: string): Promise<Category | undefined> {
+    return this.repository.findOneBy({ name });
   }
 }
 
