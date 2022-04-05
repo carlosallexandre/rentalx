@@ -1,10 +1,15 @@
 import { parse } from "csv-parse";
 import fs from "fs";
+import { injectable, inject } from "tsyringe";
 
 import { ICategoriesRepository, ICreateCategoryDTO } from "../../repositories";
 
+@injectable()
 class ImportCategoriesUseCase {
-  constructor(private categoriesRepository: ICategoriesRepository) {}
+  constructor(
+    @inject("CategoriesRepository")
+    private categoriesRepository: ICategoriesRepository
+  ) {}
 
   loadCategories(file: Express.Multer.File): Promise<ICreateCategoryDTO[]> {
     return new Promise((resolve, reject) => {
@@ -22,7 +27,6 @@ class ImportCategoriesUseCase {
         })
         .on("readable", () => {
           let chunk = parser.read();
-
           while (chunk !== null) {
             const [name, description] = chunk;
             categories.push({ name, description });
