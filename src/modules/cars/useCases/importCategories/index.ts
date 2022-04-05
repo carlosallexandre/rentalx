@@ -1,15 +1,3 @@
-import { CategoriesRepository } from "../../repositories";
 import ImportCategoriesController from "./ImportCategoriesController";
-import ImportCategoriesUseCase from "./ImportCategoriesUseCase";
 
-const categoriesRepository = CategoriesRepository.getInstance();
-
-const importCategoriesUseCase = new ImportCategoriesUseCase(
-  categoriesRepository
-);
-
-const importCategoriesController = new ImportCategoriesController(
-  importCategoriesUseCase
-);
-
-export default importCategoriesController;
+export default new ImportCategoriesController();
